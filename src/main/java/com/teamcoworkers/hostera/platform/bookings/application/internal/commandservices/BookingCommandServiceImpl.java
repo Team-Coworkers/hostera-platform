@@ -5,6 +5,7 @@ import com.teamcoworkers.hostera.platform.bookings.application.commands.CreateBo
 import com.teamcoworkers.hostera.platform.bookings.application.commands.DeleteBookingCommand;
 import com.teamcoworkers.hostera.platform.bookings.application.commands.UpdateBookingCommand;
 import com.teamcoworkers.hostera.platform.bookings.application.commandservices.BookingCommandService;
+import com.teamcoworkers.hostera.platform.bookings.application.internal.outboundservices.acl.ExternalRoomsService;
 import com.teamcoworkers.hostera.platform.bookings.domain.model.aggregates.Booking;
 import com.teamcoworkers.hostera.platform.bookings.domain.model.valueobjects.BookingLifecycle;
 import com.teamcoworkers.hostera.platform.bookings.domain.model.valueobjects.BookingStatus;
@@ -22,7 +23,8 @@ import java.util.Optional;
  * Creates, replaces and deletes bookings.
  * <p>
  * Besides the booking invariants, it checks that the property exists and that no other active
- * booking holds the same room for overlapping nights.
+ * booking holds the same room for overlapping nights. A guest cannot check in to a room the rooms
+ * context reports as blocked or out of service.
  * </p>
  */
 @Service
@@ -30,11 +32,14 @@ public class BookingCommandServiceImpl implements BookingCommandService {
 
     private final BookingRepository bookingRepository;
     private final OrganizationsContextFacade organizationsContextFacade;
+    private final ExternalRoomsService externalRoomsService;
 
     public BookingCommandServiceImpl(BookingRepository bookingRepository,
-                                     OrganizationsContextFacade organizationsContextFacade) {
+                                     OrganizationsContextFacade organizationsContextFacade,
+                                     ExternalRoomsService externalRoomsService) {
         this.bookingRepository = bookingRepository;
         this.organizationsContextFacade = organizationsContextFacade;
+        this.externalRoomsService = externalRoomsService;
     }
 
     @Override
@@ -64,6 +69,7 @@ public class BookingCommandServiceImpl implements BookingCommandService {
         var data = command.data();
         if (!organizationsContextFacade.existsPropertyById(data.propertyId()))
             return Result.failure(ApplicationError.notFound("Property", String.valueOf(data.propertyId())));
+        var wasInHouse = existing.get().isInHouse();
         Booking booking;
         try {
             booking = existing.get().updateInformation(data.propertyId(), data.code(),
@@ -73,6 +79,9 @@ public class BookingCommandServiceImpl implements BookingCommandService {
         } catch (IllegalArgumentException e) {
             return Result.failure(ApplicationError.validationError("booking", e.getMessage()));
         }
+        if (!wasInHouse && booking.isInHouse() && externalRoomsService.isRoomBlockedToday(booking.getRoomId()))
+            return Result.failure(ApplicationError.businessRuleViolation("room-available",
+                    "Room %d is blocked and cannot receive guests".formatted(booking.getRoomId())));
         var conflict = findConflict(booking);
         if (conflict.isPresent()) return Result.failure(conflict.get());
         return Result.success(bookingRepository.save(booking));
