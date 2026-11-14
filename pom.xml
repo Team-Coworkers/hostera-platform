@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.teamcoworkers.hostera</groupId>
     <artifactId>platform</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
     <name>Hostera Platform</name>
     <description>Hostera Platform is the RESTful API of Hostera, the hotel operations platform of Team Coworkers. It follows Domain-Driven Design with Java 25, Spring Boot 4, Spring Data JPA and PostgreSQL, and covers IAM, properties and staff, bookings and payments, rooms and rates, inventory and access control.</description>
     <url/>
