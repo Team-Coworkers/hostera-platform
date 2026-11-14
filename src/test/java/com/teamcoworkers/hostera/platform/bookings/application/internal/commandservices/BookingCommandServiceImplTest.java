@@ -3,6 +3,7 @@ package com.teamcoworkers.hostera.platform.bookings.application.internal.command
 import com.teamcoworkers.hostera.platform.bookings.application.commands.BookingData;
 import com.teamcoworkers.hostera.platform.bookings.application.commands.CreateBookingCommand;
 import com.teamcoworkers.hostera.platform.bookings.application.commands.UpdateBookingCommand;
+import com.teamcoworkers.hostera.platform.bookings.application.internal.outboundservices.acl.ExternalRoomsService;
 import com.teamcoworkers.hostera.platform.bookings.domain.model.aggregates.Booking;
 import com.teamcoworkers.hostera.platform.bookings.domain.model.valueobjects.BookingStatus;
 import com.teamcoworkers.hostera.platform.bookings.domain.repositories.BookingRepository;
@@ -35,6 +36,9 @@ class BookingCommandServiceImplTest {
 
     @Mock
     private OrganizationsContextFacade organizationsContextFacade;
+
+    @Mock
+    private ExternalRoomsService externalRoomsService;
 
     @InjectMocks
     private BookingCommandServiceImpl service;
@@ -110,6 +114,19 @@ class BookingCommandServiceImplTest {
         var result = service.handle(new UpdateBookingCommand(99L, data("BKG-2001", "confirmed", 12L, "2026-10-07", "2026-10-09", 2)));
 
         assertThat(errorCode(result)).isEqualTo("BOOKING_NOT_FOUND");
+    }
+
+    @Test
+    void refusesTheCheckInToABlockedRoom() {
+        var existing = booking(4L, BookingStatus.CONFIRMED, 12L, "2026-10-07", "2026-10-09");
+        when(bookingRepository.findById(4L)).thenReturn(Optional.of(existing));
+        when(organizationsContextFacade.existsPropertyById(1L)).thenReturn(true);
+        when(externalRoomsService.isRoomBlockedToday(12L)).thenReturn(true);
+
+        var result = service.handle(new UpdateBookingCommand(4L, data("BKG-1004", "checked-in", 12L, "2026-10-07", "2026-10-09", 2)));
+
+        assertThat(errorCode(result)).isEqualTo("BUSINESS_RULE_VIOLATION");
+        verify(bookingRepository, never()).save(any());
     }
 
     @Test

@@ -37,7 +37,7 @@ public class StaffMembersController {
     }
 
     @GetMapping
-    @Operation(summary = "List Staff members", description = "Returns every Staff member, optionally filtered by propertyId.")
+    @Operation(summary = "List the staff members", description = "Returns every staff member, optionally filtered by propertyId.")
     @ApiResponse(responseCode = "200", description = "Staff members retrieved")
     public ResponseEntity<List<StaffMemberResource>> getAll(
             @RequestParam(required = false) @Parameter(description = "Property where the staff members work", example = "1") Long propertyId) {
@@ -47,7 +47,7 @@ public class StaffMembersController {
     }
 
     @GetMapping("/{staffMemberId}")
-    @Operation(summary = "Get a Staff member by id")
+    @Operation(summary = "Get a staff member by id")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Staff member found"),
             @ApiResponse(responseCode = "404", description = "Staff member not found")})
@@ -59,18 +59,18 @@ public class StaffMembersController {
     }
 
     @PostMapping
-    @Operation(summary = "Create a Staff member")
+    @Operation(summary = "Create a staff member")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Staff member created"),
             @ApiResponse(responseCode = "400", description = "Invalid data"),
-            @ApiResponse(responseCode = "409", description = "Conflict with an existing Staff member")})
+            @ApiResponse(responseCode = "409", description = "Conflict with an existing staff member")})
     public ResponseEntity<?> create(@Valid @RequestBody SaveStaffMemberResource resource) {
         var result = commandService.handle(StaffMemberResourceFromEntityAssembler.toCreateCommand(resource));
         return ResponseEntityAssembler.toResponseEntityFromResult(result, StaffMemberResourceFromEntityAssembler::toResourceFromEntity, HttpStatus.CREATED);
     }
 
     @PutMapping("/{staffMemberId}")
-    @Operation(summary = "Update a Staff member")
+    @Operation(summary = "Update a staff member")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Staff member updated"),
             @ApiResponse(responseCode = "400", description = "Invalid data"),
@@ -81,13 +81,13 @@ public class StaffMembersController {
     }
 
     @DeleteMapping("/{staffMemberId}")
-    @Operation(summary = "Delete a Staff member")
+    @Operation(summary = "Delete a staff member")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Staff member deleted"),
             @ApiResponse(responseCode = "404", description = "Staff member not found")})
     public ResponseEntity<?> delete(@PathVariable Long staffMemberId) {
         var result = commandService.handle(new DeleteStaffMemberCommand(staffMemberId))
-                .map(_ -> new MessageResource("Staff member with given id successfully deleted"));
+                .map(_ -> new MessageResource("Staff member successfully deleted"));
         return ResponseEntityAssembler.toResponseEntityFromResult(result, message -> message, HttpStatus.OK);
     }
 }

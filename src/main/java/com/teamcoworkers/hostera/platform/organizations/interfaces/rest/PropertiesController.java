@@ -37,8 +37,8 @@ public class PropertiesController {
     }
 
     @GetMapping
-    @Operation(summary = "List Propertys", description = "Returns every Property, optionally filtered by organizationId.")
-    @ApiResponse(responseCode = "200", description = "Propertys retrieved")
+    @Operation(summary = "List the properties", description = "Returns every property, optionally filtered by organizationId.")
+    @ApiResponse(responseCode = "200", description = "Properties retrieved")
     public ResponseEntity<List<PropertyResource>> getAll(
             @RequestParam(required = false) @Parameter(description = "Organization that owns the properties", example = "1") Long organizationId) {
         var items = queryService.handle(new GetAllPropertiesQuery(organizationId)).stream()
@@ -47,7 +47,7 @@ public class PropertiesController {
     }
 
     @GetMapping("/{propertyId}")
-    @Operation(summary = "Get a Property by id")
+    @Operation(summary = "Get a property by id")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Property found"),
             @ApiResponse(responseCode = "404", description = "Property not found")})
@@ -59,18 +59,18 @@ public class PropertiesController {
     }
 
     @PostMapping
-    @Operation(summary = "Create a Property")
+    @Operation(summary = "Create a property")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Property created"),
             @ApiResponse(responseCode = "400", description = "Invalid data"),
-            @ApiResponse(responseCode = "409", description = "Conflict with an existing Property")})
+            @ApiResponse(responseCode = "409", description = "Conflict with an existing property")})
     public ResponseEntity<?> create(@Valid @RequestBody SavePropertyResource resource) {
         var result = commandService.handle(PropertyResourceFromEntityAssembler.toCreateCommand(resource));
         return ResponseEntityAssembler.toResponseEntityFromResult(result, PropertyResourceFromEntityAssembler::toResourceFromEntity, HttpStatus.CREATED);
     }
 
     @PutMapping("/{propertyId}")
-    @Operation(summary = "Update a Property")
+    @Operation(summary = "Update a property")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Property updated"),
             @ApiResponse(responseCode = "400", description = "Invalid data"),
@@ -81,13 +81,13 @@ public class PropertiesController {
     }
 
     @DeleteMapping("/{propertyId}")
-    @Operation(summary = "Delete a Property")
+    @Operation(summary = "Delete a property")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Property deleted"),
             @ApiResponse(responseCode = "404", description = "Property not found")})
     public ResponseEntity<?> delete(@PathVariable Long propertyId) {
         var result = commandService.handle(new DeletePropertyCommand(propertyId))
-                .map(_ -> new MessageResource("Property with given id successfully deleted"));
+                .map(_ -> new MessageResource("Property successfully deleted"));
         return ResponseEntityAssembler.toResponseEntityFromResult(result, message -> message, HttpStatus.OK);
     }
 }
