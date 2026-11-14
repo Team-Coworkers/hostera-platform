@@ -1,5 +1,6 @@
 package com.teamcoworkers.hostera.platform.bookings.domain.model.aggregates;
 
+import com.teamcoworkers.hostera.platform.bookings.domain.model.events.BookingCheckedInEvent;
 import com.teamcoworkers.hostera.platform.bookings.domain.model.events.BookingClosedEvent;
 import com.teamcoworkers.hostera.platform.bookings.domain.model.valueobjects.BookingLifecycle;
 import com.teamcoworkers.hostera.platform.bookings.domain.model.valueobjects.BookingStatus;
@@ -90,8 +91,11 @@ public class Booking extends AbstractDomainAggregateRoot<Booking> {
         this.guestRequest = guestRequest == null ? "" : guestRequest;
         this.lifecycle = lifecycle == null ? BookingLifecycle.empty() : lifecycle;
 
+        if (id != null && previousStatus != null && previousStatus != BookingStatus.CHECKED_IN
+                && status == BookingStatus.CHECKED_IN)
+            registerDomainEvent(new BookingCheckedInEvent(id, propertyId, roomId, checkInMoment()));
         if (id != null && previousStatus != null && previousStatus.isActive() && status.endsGuestAccess())
-            registerDomainEvent(new BookingClosedEvent(id, propertyId, status.value(), closingMoment()));
+            registerDomainEvent(new BookingClosedEvent(id, propertyId, roomId, status.value(), closingMoment()));
         return this;
     }
 
@@ -108,6 +112,10 @@ public class Booking extends AbstractDomainAggregateRoot<Booking> {
     /** @return whether the guest is staying at the property right now */
     public boolean isInHouse() {
         return status == BookingStatus.CHECKED_IN;
+    }
+
+    private Instant checkInMoment() {
+        return lifecycle.checkedInAt() == null ? Instant.now() : lifecycle.checkedInAt();
     }
 
     private Instant closingMoment() {
