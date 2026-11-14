@@ -10,7 +10,7 @@ import jakarta.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Schema(name = "SaveInventoryItemRequest", description = "Payload to create or update a inventory item")
+@Schema(name = "SaveInventoryItemRequest", description = "Payload to create or update an inventory item")
 public record SaveInventoryItemResource(
         @NotNull @Positive @Schema(example = "1") Long propertyId,
         @NotBlank @Schema(example = "Bath towels") String name,

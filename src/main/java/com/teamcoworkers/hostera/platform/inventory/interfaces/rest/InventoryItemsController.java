@@ -48,7 +48,7 @@ public class InventoryItemsController {
     }
 
     @GetMapping("/{inventoryItemId}")
-    @Operation(summary = "Get a inventory item by id")
+    @Operation(summary = "Get an inventory item by id")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Inventory item found"),
             @ApiResponse(responseCode = "404", description = "Inventory item not found")})
@@ -60,7 +60,7 @@ public class InventoryItemsController {
     }
 
     @PostMapping
-    @Operation(summary = "Create a inventory item", description = "The code is unique in the property. The primary location and the locations of the stocks belong to the property, the quantities are never negative and an item counted in units has no decimals.")
+    @Operation(summary = "Create an inventory item", description = "The code is unique in the property. The primary location and the locations of the stocks belong to the property, the quantities are never negative and an item counted in units has no decimals.")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Inventory item created"),
             @ApiResponse(responseCode = "400", description = "Invalid data"),
@@ -73,7 +73,7 @@ public class InventoryItemsController {
     }
 
     @PutMapping("/{inventoryItemId}")
-    @Operation(summary = "Update a inventory item", description = "Replaces the data, the stocks and the adjustments of the item. The adjustments that were already recorded cannot be removed: new ones are added at the end of the list. When stocks or adjustments are not sent, the item keeps the ones it has.")
+    @Operation(summary = "Update an inventory item", description = "Replaces the data, the stocks and the adjustments of the item. The adjustments that were already recorded cannot be removed: new ones are added at the end of the list. When stocks or adjustments are not sent, the item keeps the ones it has.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Inventory item updated"),
             @ApiResponse(responseCode = "400", description = "Invalid data"),
@@ -86,7 +86,7 @@ public class InventoryItemsController {
     }
 
     @DeleteMapping("/{inventoryItemId}")
-    @Operation(summary = "Delete a inventory item", description = "An item that still has stock cannot be deleted.")
+    @Operation(summary = "Delete an inventory item", description = "An item that still has stock cannot be deleted.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Inventory item deleted"),
             @ApiResponse(responseCode = "404", description = "Inventory item not found"),
