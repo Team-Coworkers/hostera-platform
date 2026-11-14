@@ -6,6 +6,17 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-11-14
+
+### Added
+
+- Rooms bounded context: room types, rooms, rate plans, daily rates and status periods, with
+  unique room numbers per property, positive rates and valid date ranges, the room status and
+  the RoomsContextFacade for the other contexts.
+- Inventory bounded context: inventory items with their stocks and adjustments, and storage
+  locations with unique codes per property, without negative stock.
+- Demonstration seed of both contexts with the identifiers of the frontend data.
+
 ## [0.2.0] - 2026-11-14
 
 ### Added
@@ -29,6 +40,7 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `organizationId` and `propertyId`, OpenAPI documentation and the demonstration seed.
 - Multi-stage `Dockerfile` for the deployment.
 
-[Unreleased]: https://github.com/Team-Coworkers/hostera-platform/compare/v0.2.0...develop
+[Unreleased]: https://github.com/Team-Coworkers/hostera-platform/compare/v0.3.0...develop
+[0.3.0]: https://github.com/Team-Coworkers/hostera-platform/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/Team-Coworkers/hostera-platform/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/Team-Coworkers/hostera-platform/releases/tag/v0.1.0
