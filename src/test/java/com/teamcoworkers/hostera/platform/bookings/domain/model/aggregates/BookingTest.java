@@ -1,5 +1,6 @@
 package com.teamcoworkers.hostera.platform.bookings.domain.model.aggregates;
 
+import com.teamcoworkers.hostera.platform.bookings.domain.model.events.BookingCheckedInEvent;
 import com.teamcoworkers.hostera.platform.bookings.domain.model.events.BookingClosedEvent;
 import com.teamcoworkers.hostera.platform.bookings.domain.model.valueobjects.BookingLifecycle;
 import com.teamcoworkers.hostera.platform.bookings.domain.model.valueobjects.BookingStatus;
@@ -67,14 +68,29 @@ class BookingTest {
                 .isInstanceOfSatisfying(BookingClosedEvent.class, event -> {
                     assertThat(event.bookingId()).isEqualTo(7L);
                     assertThat(event.status()).isEqualTo("checked-out");
+                    assertThat(event.roomId()).isEqualTo(12L);
                 });
     }
 
     @Test
-    void doesNotRegisterAnEventForChangesThatKeepTheBookingActive() {
+    void registersABookingCheckedInEventWithTheRoom() {
         var booking = booking(7L, BookingStatus.CONFIRMED, 12L, "2026-10-07", "2026-10-09");
 
         booking.updateInformation(1L, booking.getCode(), BookingStatus.CHECKED_IN, booking.getGuest(),
+                booking.getStay(), 2, 1L, 12L, 1L, booking.getTotalAmount(), "", booking.getLifecycle());
+
+        assertThat(booking.domainEvents()).singleElement()
+                .isInstanceOfSatisfying(BookingCheckedInEvent.class, event -> {
+                    assertThat(event.bookingId()).isEqualTo(7L);
+                    assertThat(event.roomId()).isEqualTo(12L);
+                });
+    }
+
+    @Test
+    void doesNotRegisterAnEventWhenAPendingBookingIsConfirmed() {
+        var booking = booking(7L, BookingStatus.PENDING, 12L, "2026-10-07", "2026-10-09");
+
+        booking.updateInformation(1L, booking.getCode(), BookingStatus.CONFIRMED, booking.getGuest(),
                 booking.getStay(), 2, 1L, 12L, 1L, booking.getTotalAmount(), "", booking.getLifecycle());
 
         assertThat(booking.domainEvents()).isEmpty();
