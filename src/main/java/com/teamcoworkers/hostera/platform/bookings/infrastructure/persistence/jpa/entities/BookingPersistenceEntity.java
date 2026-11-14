@@ -49,7 +49,7 @@ public class BookingPersistenceEntity extends AuditableAbstractPersistenceEntity
     @Column(length = 1000)
     private String guestRequest;
     @Column(name = "booked_at", nullable = false)
-    private Instant bookedAt;
+    private LocalDate bookedAt;
     private Instant confirmedAt;
     private String confirmedBy;
     private Instant cancelledAt;

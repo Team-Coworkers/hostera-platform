@@ -10,6 +10,7 @@ import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
 
 /**
  * Booking aggregate root: a guest stay at one property, from the request to the check-out.
@@ -38,20 +39,20 @@ public class Booking extends AbstractDomainAggregateRoot<Booking> {
     private Long ratePlanId;
     private BigDecimal totalAmount;
     private String guestRequest;
-    private Instant createdAt;
+    private LocalDate createdAt;
     private BookingLifecycle lifecycle;
 
     public Booking(Long propertyId, String code, BookingStatus status, Guest guest, StayPeriod stay, Integer guests,
                    Long roomTypeId, Long roomId, Long ratePlanId, BigDecimal totalAmount, String guestRequest,
-                   Instant createdAt, BookingLifecycle lifecycle) {
-        this.createdAt = createdAt == null ? Instant.now() : createdAt;
+                   LocalDate createdAt, BookingLifecycle lifecycle) {
+        this.createdAt = createdAt == null ? LocalDate.now() : createdAt;
         updateInformation(propertyId, code, status, guest, stay, guests, roomTypeId, roomId, ratePlanId,
                 totalAmount, guestRequest, lifecycle);
     }
 
     public static Booking reconstitute(Long id, Long propertyId, String code, BookingStatus status, Guest guest,
                                        StayPeriod stay, Integer guests, Long roomTypeId, Long roomId, Long ratePlanId,
-                                       BigDecimal totalAmount, String guestRequest, Instant createdAt,
+                                       BigDecimal totalAmount, String guestRequest, LocalDate createdAt,
                                        BookingLifecycle lifecycle) {
         var booking = new Booking(propertyId, code, status, guest, stay, guests, roomTypeId, roomId, ratePlanId,
                 totalAmount, guestRequest, createdAt, lifecycle);

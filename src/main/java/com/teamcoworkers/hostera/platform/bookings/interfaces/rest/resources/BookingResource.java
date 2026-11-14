@@ -25,7 +25,7 @@ public record BookingResource(
         @Schema(example = "1") Long ratePlanId,
         @Schema(example = "340") BigDecimal totalAmount,
         @Schema(example = "Late arrival, around 22:00") String guestRequest,
-        @Schema(example = "2026-10-01T15:20:00Z") Instant createdAt,
+        @Schema(example = "2026-10-01") LocalDate createdAt,
         @Schema(example = "2026-10-01T15:25:00Z") Instant confirmedAt,
         @Schema(example = "Demo operator") String confirmedBy,
         @Schema(nullable = true) Instant cancelledAt,

@@ -14,7 +14,7 @@ public record BookingData(
         String guestDocumentType, String guestDocumentNumber,
         LocalDate checkInDate, LocalDate checkOutDate, Integer guests,
         Long roomTypeId, Long roomId, Long ratePlanId, BigDecimal totalAmount, String guestRequest,
-        Instant createdAt,
+        LocalDate createdAt,
         Instant confirmedAt, String confirmedBy,
         Instant cancelledAt, String cancelledBy, String cancellationReason, String cancellationNote,
         Instant noShowAt, String noShowBy,
