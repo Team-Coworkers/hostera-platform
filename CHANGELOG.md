@@ -6,6 +6,18 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-11-14
+
+### Added
+
+- Bookings and access control use the RoomsContextFacade: check-in marks the room as occupied,
+  check-out leaves it pending cleaning, and issuing a key card or checking in at a blocked or
+  out-of-service room is rejected.
+
+### Fixed
+
+- Wording of the OpenAPI operations of the properties and staff-members endpoints.
+
 ## [0.3.0] - 2026-11-14
 
 ### Added
@@ -40,7 +52,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `organizationId` and `propertyId`, OpenAPI documentation and the demonstration seed.
 - Multi-stage `Dockerfile` for the deployment.
 
-[Unreleased]: https://github.com/Team-Coworkers/hostera-platform/compare/v0.3.0...develop
+[Unreleased]: https://github.com/Team-Coworkers/hostera-platform/compare/v0.3.1...develop
+[0.3.1]: https://github.com/Team-Coworkers/hostera-platform/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/Team-Coworkers/hostera-platform/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/Team-Coworkers/hostera-platform/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/Team-Coworkers/hostera-platform/releases/tag/v0.1.0
